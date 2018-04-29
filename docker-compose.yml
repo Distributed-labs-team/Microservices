@@ -1,0 +1,31 @@
+version: "3"
+services:
+    rabbitmq:
+        image: rabbitmq:3-management
+        restart: always
+        ports:
+            - "15672:15672"
+        logging:
+            options:
+                max-size: "10m"
+                max-file: "10"
+
+    config:
+        image: alkonoriev/distributed-lab-config
+        restart: always
+        ports:
+            - "8888:8888"
+
+    registry:
+        image: alkonoriev/distributed-lab-registry:latest
+        restart: always
+        depends_on:
+            - config
+        ports:
+            - "8761:8761"
+
+    product-service:
+        image: alkonoriev/distributed-lab-product-service
+        restart: always
+        depends_on:
+            - config
