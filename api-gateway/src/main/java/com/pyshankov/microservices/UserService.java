@@ -29,7 +29,6 @@ public interface UserService {
     }
 
     class FeignSimpleEncoderConfig {
-
         @Bean
         public Encoder encoder() {
             ObjectFactory<HttpMessageConverters> objectFactory = () ->
