@@ -2,6 +2,7 @@ package com.pyshankov.microservices.service;
 
 import com.pyshankov.microservices.domain.Product;
 import com.pyshankov.microservices.repository.ProductRepository;
+import com.pyshankov.microservices.domain.ProductEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +14,14 @@ public class ProductService {
 
     @Autowired
     ProductRepository productRepository;
+  
+    @Autowired
+    private AmqpProducerService amqpProducerService;
 
     public void createProduct(String name, String description, BigDecimal price) {
         Product product = new Product(name, description, price);
         productRepository.save(product);
+        amqpProducerService.produceMsg(new ProductEvent());
     }
 
     public void deleteProduct(Long id) {
@@ -30,6 +35,5 @@ public class ProductService {
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
-
 
 }
