@@ -49,9 +49,8 @@ public class TokenPreFilter extends ZuulFilter {
         HttpServletRequest request = ctx.getRequest();
         HttpServletResponse response = ctx.getResponse();
 
-//        response.setHeader("Location", request.getRequestURL().toString());
-
         String header = request.getHeader(HEADER_STRING);
+        ctx.addZuulRequestHeader(HEADER_STRING, header);
 
         if (hazelcastClientTemplate.getContainsUserInCacheByToken(header)) {
             return null;
