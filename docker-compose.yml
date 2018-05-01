@@ -2,9 +2,10 @@ version: "3"
 services:
     rabbitmq:
         image: rabbitmq:3-management
-        restart: always
+        restart: on-failure
         ports:
             - "15672:15672"
+            - "5672:5672"
         logging:
             options:
                 max-size: "10m"
@@ -12,21 +13,19 @@ services:
 
     config:
         image: alkonoriev/distributed-lab-config
-        restart: always
+        restart: on-failure
         ports:
             - "8888:8888"
+        network_mode: "host"
 
     registry:
         image: alkonoriev/distributed-lab-registry:latest
-        restart: always
-        depends_on:
-            - config
+        restart: on-failure
         ports:
             - "8761:8761"
+        network_mode: "host"
 
     product-service:
         image: alkonoriev/distributed-lab-product-service
-        restart: always
-        depends_on:
-            - config
-            - registry
+        restart: on-failure
+        network_mode: "host"
