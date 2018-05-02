@@ -8,6 +8,8 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
+
 
 @RestController
 @SpringBootApplication
@@ -18,6 +20,11 @@ public class StatisticServiceApplication {
         SpringApplication.run(StatisticServiceApplication.class, args);
     }
 
+
+    @PostConstruct
+    public void init(){
+        System.out.println("YOOOOHUUUU");
+    }
 
     @Autowired
     private DiscoveryClient discoveryClient;
