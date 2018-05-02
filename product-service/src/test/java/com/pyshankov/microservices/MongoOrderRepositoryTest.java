@@ -36,8 +36,8 @@ public class MongoOrderRepositoryTest {
         user = new User("admin@gmail.com","asdasd");
         Order order1 = new Order();
         Order order2 = new Order();
-        order1.setUser(user);
-        order2.setUser(user);
+        order1.setUser(user.getEmail());
+        order2.setUser(user.getEmail());
         order1.setPrice(new BigDecimal(DEFAULT_COAST));
         order2.setPrice(new BigDecimal(DEFAULT_COAST*2));
         assertNull(order1.getId());
