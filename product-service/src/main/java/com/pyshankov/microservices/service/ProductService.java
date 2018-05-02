@@ -2,6 +2,7 @@ package com.pyshankov.microservices.service;
 
 import com.pyshankov.microservices.domain.Product;
 import com.pyshankov.microservices.domain.ProductEventType;
+import com.pyshankov.microservices.domain.User;
 import com.pyshankov.microservices.hazelcast.cache.HazelcastClientTemplate;
 import com.pyshankov.microservices.repository.ProductRepository;
 import com.pyshankov.microservices.domain.ProductEvent;
@@ -19,7 +20,12 @@ public class ProductService {
     @Autowired
     private AmqpProducerService amqpProducerService;
 
-    public void persist(Product product) {
+    @Autowired
+    private HazelcastClientTemplate hazelcastClientTemplate;
+
+    public void persist(Product product, String token) {
+        User user = hazelcastClientTemplate.getUserFromCacheByToken(token);
+        product.setOwner(user);
         productRepository.save(product);
         amqpProducerService.produceMsg(new ProductEvent(product.getId(),null, ProductEventType.CREATE_PRODUCT));
     }

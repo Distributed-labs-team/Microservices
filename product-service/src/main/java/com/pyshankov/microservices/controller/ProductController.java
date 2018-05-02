@@ -18,9 +18,6 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @Autowired
-    private HazelcastClientTemplate hazelcastClientTemplate;
-
     public static final String HEADER_STRING = "Authorization";
 
     @GetMapping(value = "/products")
@@ -41,9 +38,7 @@ public class ProductController {
     @PostMapping(value = "/product/{id}")
     public ResponseEntity<String> createProduct(@RequestBody Product product, @RequestHeader HttpHeaders headers) {
         // TODO check if product is valid
-        User user = hazelcastClientTemplate.getUserFromCacheByToken(headers.getFirst(HEADER_STRING));
-        product.setOwner(user);
-        productService.persist(product);
+        productService.persist(product, headers.getFirst(HEADER_STRING));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
