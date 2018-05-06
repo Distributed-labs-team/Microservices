@@ -1,25 +1,25 @@
 version: "3"
 services:
     config:
-        image: alkonoriev/distributed-lab-config
+        build: config
         restart: on-failure
         ports:
             - "8888:8888"
-        network_mode: "host"
+#        network_mode: "host"
 
     registry:
-        image: alkonoriev/distributed-lab-registry:latest
+        build: registry
         restart: on-failure
         ports:
             - "8761:8761"
-        network_mode: "host"
+#        network_mode: "host"
         depends_on:
             - config
 
     hazelcast-cache:
-        image: alkonoriev/distributed-lab-hazelcast-cache
+        image: hazelcast/hazelcast
         restart: on-failure
-        network_mode: "host"
+#        network_mode: "host"
         ports:
             - "5701:5701"
         depends_on:
@@ -27,9 +27,9 @@ services:
             - registry
     
     api-gateway:
-        image: alkonoriev/distributed-lab-api-gateway
+        build: api-gateway
         restart: on-failure
-        network_mode: "host"
+#        network_mode: "host"
         ports:
             - "8080:8080"
         depends_on:
@@ -37,66 +37,66 @@ services:
             - registry
             - hazelcast-cache
     
-    product-service:
-        image: alkonoriev/distributed-lab-product-service
-        restart: on-failure
-        network_mode: "host"
-        depends_on:
-            - config
-            - registry
-            - hazelcast-cache
-            - api-gateway
-        healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:8888"]
-    
-    user-mongodb:
-        environment: 
-            MONGODB_DATABASE: "microservicedatabase"
-        image: mongo:latest
-        restart: on-failure
-        volumes:
-            - ./data/db:/data/db
-        ports:
-            - "27017:27017"
-        logging:
-            options:
-                max-size: "10m"
-                max-file: "10"
-    
-    user-service:
-        image: alkonoriev/distributed-lab-user-service
-        restart: on-failure
-        network_mode: "host"
-        healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:8888"]
-        depends_on:
-            - config
-            - registry
-            - hazelcast-cache
-            - api-gateway
-            - user-mongodb
-    
-    statistic-service:
-        image: alkonoriev/distibuted-lab-statistic-service
-        restart: on-failure
-        network_mode: "host"
-        healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:8888"]
-        depends_on:
-            - config
-            - registry
-            - hazelcast-cache
-            - api-gateway
-            - user-mongodb
-    
-    statistic-cassandra:
-        image: casandra:3.10
-        restart: on-failure
-        volumes:
-            - ./cassandradb/dbvol:/var/lib/cassandradb
-        ports:
-            - "9160:9160"
-        logging:
-            options:
-                max-size: "10m"
-                max-file: "10"
+#    product-service:
+#        build: product-service
+#        restart: on-failure
+##        network_mode: "host"
+#        depends_on:
+#            - config
+#            - registry
+#            - hazelcast-cache
+#            - api-gateway
+#        healthcheck:
+#            test: ["CMD", "curl", "-f", "http://localhost:8888"]
+#
+#    user-mongodb:
+#        environment:
+#            MONGODB_DATABASE: "microservicedatabase"
+#        image: mongo:latest
+#        restart: on-failure
+#        volumes:
+#            - ./data/db:/data/db
+#        ports:
+#            - "27017:27017"
+#        logging:
+#            options:
+#                max-size: "10m"
+#                max-file: "10"
+#
+#    user-service:
+#        image: alkonoriev/distributed-lab-user-service
+#        restart: on-failure
+#        network_mode: "host"
+#        healthcheck:
+#            test: ["CMD", "curl", "-f", "http://localhost:8888"]
+#        depends_on:
+#            - config
+#            - registry
+#            - hazelcast-cache
+#            - api-gateway
+#            - user-mongodb
+#
+#    statistic-service:
+#        image: alkonoriev/distibuted-lab-statistic-service
+#        restart: on-failure
+#        network_mode: "host"
+#        healthcheck:
+#            test: ["CMD", "curl", "-f", "http://localhost:8888"]
+#        depends_on:
+#            - config
+#            - registry
+#            - hazelcast-cache
+#            - api-gateway
+#            - user-mongodb
+#
+#    statistic-cassandra:
+#        image: casandra:3.10
+#        restart: on-failure
+#        volumes:
+#            - ./cassandradb/dbvol:/var/lib/cassandradb
+#        ports:
+#            - "9160:9160"
+#        logging:
+#            options:
+#                max-size: "10m"
+#                max-file: "10"
