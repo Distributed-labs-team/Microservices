@@ -12,8 +12,11 @@ public class StatisticService {
 //    @RabbitListener(queues = "${amqp.rabbitmq.queue}")
     public void handleEvent(Event event) {
         AmqpConsumer.recievedMessage(event, (message) -> {
+
             // TODO: store there event variable to cassandra db, @valera
         });
     }
+
+
 
 }
