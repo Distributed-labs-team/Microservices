@@ -49,32 +49,32 @@ services:
 #        healthcheck:
 #            test: ["CMD", "curl", "-f", "http://localhost:8888"]
 #
-#    user-mongodb:
-#        environment:
-#            MONGODB_DATABASE: "microservicedatabase"
-#        image: mongo:latest
-#        restart: on-failure
-#        volumes:
-#            - ./data/db:/data/db
-#        ports:
-#            - "27017:27017"
-#        logging:
-#            options:
-#                max-size: "10m"
-#                max-file: "10"
-#
-#    user-service:
-#        image: alkonoriev/distributed-lab-user-service
-#        restart: on-failure
+    user-mongodb:
+        environment:
+            MONGODB_DATABASE: "microservicedatabase"
+        image: mongo:latest
+        restart: on-failure
+        volumes:
+            - ./data/db:/data/db
+        ports:
+            - "27017:27017"
+        logging:
+            options:
+                max-size: "10m"
+                max-file: "10"
+
+    user-service:
+        build: user-service
+        restart: on-failure
 #        network_mode: "host"
-#        healthcheck:
-#            test: ["CMD", "curl", "-f", "http://localhost:8888"]
-#        depends_on:
-#            - config
-#            - registry
-#            - hazelcast-cache
-#            - api-gateway
-#            - user-mongodb
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8888"]
+        depends_on:
+            - config
+            - registry
+            - hazelcast-cache
+            - api-gateway
+            - user-mongodb
 #
 #    statistic-service:
 #        image: alkonoriev/distibuted-lab-statistic-service
