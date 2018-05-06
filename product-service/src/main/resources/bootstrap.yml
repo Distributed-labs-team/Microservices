@@ -3,8 +3,13 @@ spring:
     name: product-service
   cloud:
     config:
-      uri: http://localhost:8888
+      uri: http://config:8888
       fail-fast: true
+  data:
+    mongodb:
+        port: 27017
+        host: user-mongodb
+        database: microservicedatabase
 server:
   port: 10001
 
