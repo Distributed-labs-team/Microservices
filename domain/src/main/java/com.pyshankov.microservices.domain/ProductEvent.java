@@ -11,6 +11,9 @@ public class ProductEvent extends Event {
     private LocalDateTime timestamp;
     private String userId;
 
+    public ProductEvent() {
+    }
+
     public ProductEvent(String productId, String userId, ProductEventType productEventType) {
         this.productId = productId;
         this.productEventType = productEventType;
