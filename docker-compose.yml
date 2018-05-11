@@ -35,18 +35,6 @@ services:
           - "5672:5672"
           - "15672:15672"
 
-    postgres:
-        image: postgres
-        expose:
-            - "5432"
-        environment:
-          POSTGRES_PASSWORD: example
-          POSTGRES_USER: postgres
-#        volumes:
-        ports:
-          - "5432:5432"
-
-
 
 
     hazelcast-cache:
@@ -170,15 +158,15 @@ services:
             - hazelcast-cache
             - api-gateway
             - user-mongodb
-#
-#    statistic-cassandra:
-#        image: casandra:3.10
-#        restart: on-failure
-#        volumes:
-#            - ./cassandradb/dbvol:/var/lib/cassandradb
-#        ports:
-#            - "9160:9160"
-#        logging:
-#            options:
-#                max-size: "10m"
-#                max-file: "10"
+
+    statistic-cassandra:
+        image: casandra:3.10
+        restart: on-failure
+        volumes:
+            - ./cassandradb/dbvol:/var/lib/cassandradb
+        expose:
+            - "9160"
+        logging:
+            options:
+                max-size: "10m"
+                max-file: "10"
