@@ -159,14 +159,14 @@ services:
             - api-gateway
             - user-mongodb
 
-    statistic-cassandra:
-        image: casandra:3.10
-        restart: on-failure
-        volumes:
-            - ./cassandradb/dbvol:/var/lib/cassandradb
-        expose:
-            - "9160"
-        logging:
-            options:
-                max-size: "10m"
-                max-file: "10"
+#    statistic-cassandra:
+#        image: casandra:3.10
+#        restart: on-failure
+#        volumes:
+#            - ./cassandradb/dbvol:/var/lib/cassandradb
+#        expose:
+#            - "9160"
+#        logging:
+#            options:
+#                max-size: "10m"
+#                max-file: "10"
