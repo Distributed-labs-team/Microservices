@@ -35,6 +35,18 @@ services:
           - "5672:5672"
           - "15672:15672"
 
+    postgres:
+        image: postgres
+        expose:
+            - "5432"
+        environment:
+          POSTGRES_PASSWORD: example
+          POSTGRES_USER: postgres
+#        volumes:
+        ports:
+          - "5432:5432"
+
+
 
 
     hazelcast-cache:
@@ -90,8 +102,44 @@ services:
             options:
                 max-size: "10m"
                 max-file: "10"
-#        ports:
-#            - "27017:27017"
+
+#-----------------------mongo db replica set: start--------------------------
+    mongo-primary:
+        image: mongo:3.4
+        volumes:
+          - ./p:/data
+        expose:
+          - "27017"
+        ports:
+          - "27017:27017"
+        command: mongod --smallfiles --replSet microservice-replica
+
+    mongo-secondary1:
+        image: mongo:3.4
+        volumes:
+          - ./s1:/data
+        expose:
+          - "27017"
+        ports:
+          - "27018:27017"
+        command: mongod --smallfiles --replSet microservice-replica
+
+
+    mongo-secondary2:
+        image: mongo:3.4
+        volumes:
+          - ./s2:/data
+        expose:
+          - "27017"
+        ports:
+          - "27019:27017"
+        command: mongod --smallfiles --replSet microservice-replica
+
+    replica-set-configurer:
+        build: replica-set-configurer
+
+#-----------------------mongo db replica set: end--------------------------
+
 
     user-service:
         build: user-service
