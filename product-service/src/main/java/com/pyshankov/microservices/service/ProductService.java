@@ -39,8 +39,16 @@ public class ProductService {
         return productRepository.findOne(id);
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<Product> getAllActiveProducts() {
+        return productRepository.findByBoughtFalse();
     }
 
+    public List<Product> getAllUserProducts(String email) {
+        return productRepository.findByOwnerEmail(email);
+    }
+
+    public void buyProduct(Product product) {
+        product.setBought(true);
+        productRepository.save(product);
+    }
 }
