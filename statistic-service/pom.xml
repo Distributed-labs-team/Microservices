@@ -62,6 +62,11 @@
             <artifactId>spring-cloud-netflix-eureka-client</artifactId>
             <version>RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
+            <version>RELEASE</version>
+        </dependency>
     </dependencies>
 
     <properties>
