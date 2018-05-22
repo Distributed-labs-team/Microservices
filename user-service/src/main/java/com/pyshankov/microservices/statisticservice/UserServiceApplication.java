@@ -28,6 +28,7 @@ public class UserServiceApplication {
         return (args) -> {
             userRepository.deleteAll();
             userRepository.save(new User("test", passwordEncoder.encode("123321")));
+            userRepository.save(new User("user2", passwordEncoder.encode("1234")));
         };
     }
 
