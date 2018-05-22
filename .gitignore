@@ -1,4 +1,7 @@
 *.iml
 .idea
 */target/
-data
+data/
+p/
+s1/
+s2/
