@@ -1,5 +1,6 @@
 package com.pyshankov.microservices.statisticservice.controller;
 
+
 import com.pyshankov.microservices.statisticservice.service.StatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class StatisticController {
     @Autowired
     StatisticService statisticService;
-
+//
 //    @RequestMapping("/allevents")
-//    public List<Event> eventByName(@RequestParam(value="name") String name) {
-//        List<Event> events = statisticService.getEventsByName(name);
-//        if(events.isEmpty()){
+//    public List<ProductEvent> events() {
+//        List<ProductEvent> events = statisticService
+//        if (events.isEmpty()) {
 //            return null;
 //        }
 //        return events;

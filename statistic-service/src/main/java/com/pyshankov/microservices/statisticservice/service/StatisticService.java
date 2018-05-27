@@ -1,8 +1,8 @@
 package com.pyshankov.microservices.statisticservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pyshankov.microservices.domain.ProductEvent;
 import com.pyshankov.microservices.statisticservice.config.RabbitConfig;
+import com.pyshankov.microservices.statisticservice.domain.ProductEvent;
 import com.pyshankov.microservices.statisticservice.repository.StatisticRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

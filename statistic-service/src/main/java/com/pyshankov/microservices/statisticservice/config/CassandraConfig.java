@@ -1,32 +1,44 @@
 package com.pyshankov.microservices.statisticservice.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.cassandra.config.AbstractCassandraConfiguration;
-import org.springframework.data.cassandra.config.CassandraClusterFactoryBean;
-import org.springframework.data.cassandra.core.convert.CassandraCustomConversions;
-import org.springframework.data.cassandra.core.mapping.BasicCassandraMappingContext;
-import org.springframework.data.cassandra.core.mapping.CassandraMappingContext;
+import org.springframework.data.cassandra.config.CassandraCqlClusterFactoryBean;
+import org.springframework.data.cassandra.config.SchemaAction;
+import org.springframework.data.cassandra.core.cql.keyspace.CreateKeyspaceSpecification;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by valeriyartemenko on 06.05.18.
- */
+
 @Configuration
 public class CassandraConfig extends AbstractCassandraConfiguration {
 
-    @Value("${cassandra.contactpoints}")
-    private String CASSANDRA_CONTACTPOINT;
+    //    @Value("${cassandra.contactpoints}")
+    private String CASSANDRA_CONTACTPOINT = "statistic-cassandra";
 
-    @Value("${cassandra.port}")
-    private Integer CASSANDRA_PORT;
+    //    @Value("${cassandra.port}")
+    private Integer CASSANDRA_PORT = 9042;
 
-    @Value("${cassandra.keyspace}")
-    private String CASSANDRA_KEYSPACE;
+    //    @Value("${cassandra.keyspace}")
+    private String CASSANDRA_KEYSPACE = "event";
+
+    @Bean
+    @Override
+    public CassandraCqlClusterFactoryBean cluster() {
+        CassandraCqlClusterFactoryBean bean = new CassandraCqlClusterFactoryBean();
+        bean.setKeyspaceCreations(getKeyspaceCreations());
+        bean.setContactPoints(CASSANDRA_CONTACTPOINT);
+//        bean.setPort(CASSANDRA_PORT);
+//        bean.setUsername(USERNAME);
+//        bean.setPassword(PASSWORD);
+        return bean;
+    }
+
+    @Override
+    public SchemaAction getSchemaAction() {
+        return SchemaAction.CREATE_IF_NOT_EXISTS;
+    }
 
     @Override
     protected String getKeyspaceName() {
@@ -34,24 +46,19 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
     }
 
     @Override
-    public CassandraCustomConversions customConversions() {
-        List<Converter> converters = new ArrayList<>();
-        converters.add(new DateToLocalDateTime());
-        converters.add(new LocalDateTimeToDate());
-        return new CassandraCustomConversions(converters);
+    public String[] getEntityBasePackages() {
+        return new String[]{"com.pyshankov.microservices.statisticservice.domain"};
     }
 
-    @Bean
-    public CassandraClusterFactoryBean cluster() {
-        CassandraClusterFactoryBean cluster = new CassandraClusterFactoryBean();
-        cluster.setContactPoints(CASSANDRA_CONTACTPOINT);
-        cluster.setPort(CASSANDRA_PORT);
-        return cluster;
+
+    protected List<CreateKeyspaceSpecification> getKeyspaceCreations() {
+        List<CreateKeyspaceSpecification> createKeyspaceSpecifications = new ArrayList<>();
+        createKeyspaceSpecifications.add(getKeySpaceSpecification());
+        return createKeyspaceSpecifications;
     }
 
-    @Bean
-    public CassandraMappingContext cassandraMapping() throws ClassNotFoundException {
-        return new BasicCassandraMappingContext();
+    private CreateKeyspaceSpecification getKeySpaceSpecification() {
+        return CreateKeyspaceSpecification.createKeyspace(CASSANDRA_KEYSPACE).ifNotExists(true).withSimpleReplication();
     }
 }
 
