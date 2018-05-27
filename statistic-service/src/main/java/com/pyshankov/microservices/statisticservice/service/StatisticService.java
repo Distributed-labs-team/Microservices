@@ -1,8 +1,9 @@
 package com.pyshankov.microservices.statisticservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pyshankov.microservices.domain.ProductEvent;
 import com.pyshankov.microservices.statisticservice.config.RabbitConfig;
+import com.pyshankov.microservices.statisticservice.domain.ProductEvent;
+import com.pyshankov.microservices.statisticservice.repository.StatisticRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -21,11 +22,15 @@ public class StatisticService {
 
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    StatisticRepository statisticRepository;
 
     @RabbitListener(queues = RabbitConfig.QUEUE_ORDERS)
     public void handleEvent(String event) {
         AmqpConsumer.recievedMessage(getProductEventFromJson(event), (message) -> {
             logger.info("Order Received: " + message);
+            ProductEvent newProductEvent = getProductEventFromJson(event);
+            statisticRepository.save(newProductEvent);
         });
     }
 
