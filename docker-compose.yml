@@ -16,8 +16,8 @@ services:
         hostname: registry
         expose:
             - "8761"
-#        ports:
-#            - "8761:8761"
+        ports:
+            - "8761:8761"
 
 
     rabbitmq:
